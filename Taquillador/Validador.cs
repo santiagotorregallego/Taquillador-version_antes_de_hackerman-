@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
@@ -11,6 +12,8 @@ namespace Taquillador
 {
     class Validador
     {
+        private static int counter = 0;
+        private static int counterhacker = 0;
         public static string CargaRuta()
         {
             Console.Write("Ingrese la ruta del archivo de invitados: ");
@@ -21,6 +24,7 @@ namespace Taquillador
 
         public static string ValidarUsuario()
         {
+
             string nombre = " ";
             Console.WriteLine("Ingrese su contraseña: ");
             string contraseña = Console.ReadLine();
@@ -34,15 +38,17 @@ namespace Taquillador
             else if (contraseña == "soy_yo")
             {
                 Console.Write("Hola Hacker: ");
-                nombre = "hacker";
+                counterhacker++;
+                nombre = "usuario";
                 //return false;
             }
             else
             {
-                Console.WriteLine("Contraseña no válida: ");
-                //return false;   
+                Console.WriteLine("Contraseña no válida");
+                nombre = " ";
             }
             return nombre;
+
         }
         public static List<Invitado> LeerArchivo(string rutaArchivo)
         {
@@ -71,10 +77,18 @@ namespace Taquillador
             }
             return invitados;
         }
-        public static void ValidarInvitado(List<Invitado> invitados, string email)
+        /*public static void  ValidarInvitado(List<Invitado> invitados, string email)
         {
-            IsValidInvitado(invitados, email);
-        }
+            //string llave = " ";
+            if (IsValidInvitado(invitados, email))
+            {
+                counter++;
+            }
+            else
+            {
+                Console.WriteLine("Usuario no válido");
+            }
+        }*/
         static bool EsEmailValido(string email)
         {
             string pattern = @"^[a-zA-Z][\w.-]*@[a-zA-Z]+\.(com|co|edu\.co|org)$";
@@ -83,6 +97,7 @@ namespace Taquillador
 
         public static bool IsValidInvitado(List<Invitado> invitados, string email)
         {
+            //string llave = " ";
             // Buscar al invitado en la lista y verificar si cumple con las condiciones
             Invitado invitado = invitados.Find(i => i.Email == email);
             if (invitado == null)
@@ -103,6 +118,8 @@ namespace Taquillador
             else
             {
                 Console.WriteLine("El invitado puede pasar al evento.");
+                //llave = "usuarioVálido";
+                counter++;
                 return true;
             }
         }
@@ -139,40 +156,34 @@ namespace Taquillador
                 invitados.Add(invitado);
             }
         }
-        public static void MostrarArchivo(string rutaArchivo, List<Invitado> invitados, string nombre)
+        public static void MostrarArchivo(string rutaArchivo, List<Invitado> invitados, string extension)
         {
             //string nombre = ValidarUsuario();
-            if (nombre == "usuario")
+            if (counterhacker == 0)
             {
-                GuardarInvitadosEnArchivo(rutaArchivo, invitados);
+                VerInvitadosEnArchivo(rutaArchivo, invitados);
                 //Console.WriteLine(invitados);
             }
-            else if (nombre == "hacker")
+            else if (counterhacker == 1)
             {
-                HackerMan.Sobreescritura(rutaArchivo);
+                HackerMan.Sobreescritura(rutaArchivo, extension);
+                //Console.WriteLine("Cambios guardados con éxito...");
+                //VerInvitadosEnArchivo(rutaArchivo, invitados);
                 //Console.WriteLine(invitados);
             }
         }
-        public static void GuardarInvitadosEnArchivo(string rutaArchivo, List<Invitado> invitados)
+        public static void VerInvitadosEnArchivo(string rutaArchivo, List<Invitado> invitados)
         {
-            using (StreamWriter sw = new StreamWriter(rutaArchivo))
-            {
-                foreach (Invitado invitado in invitados)
-                {
-                    sw.WriteLine($"{invitado.Nombre} {invitado.Id} {invitado.Email} {invitado.Edad}");
-                }
-            }
-
             Console.WriteLine("Desea ver la lista de invitados? responda si/no");
-            string respuesta = Console.ReadLine();
-            if (Regex.IsMatch(respuesta, "^(si|s|sí)$", RegexOptions.IgnoreCase))
+            string verLista = Console.ReadLine();
+            if (Regex.IsMatch(verLista, "^(si|s|sí)$", RegexOptions.IgnoreCase))
             {
                 foreach (Invitado invitado in invitados)
                 {
                     Console.WriteLine($"{invitado.Nombre} {invitado.Id} {invitado.Email} {invitado.Edad}");
                 }
             }
-            else if (Regex.IsMatch(respuesta, "^(no|n)$", RegexOptions.IgnoreCase))
+            else if (Regex.IsMatch(verLista, "^(no|n)$", RegexOptions.IgnoreCase))
             {
                 Console.WriteLine("Hasta la próxima");
             }
@@ -181,7 +192,44 @@ namespace Taquillador
                 Console.WriteLine("Respuesta Inválida");
             }
         }
+        public static void GuardarFormato(string rutaArchivo, List<Invitado> invitados, string extension)
+        {
+
+            extension = Path.GetExtension(rutaArchivo);
+            Console.WriteLine("¿Desea guardar?");
+            string resp = Console.ReadLine();
+            if (Regex.IsMatch(resp, "^(si|s|sí)$", RegexOptions.IgnoreCase))
+            {
+                if (extension == ".txt")
+                {
+                    using (StreamWriter sw = new StreamWriter(rutaArchivo))
+                        foreach (Invitado invitado in invitados)
+                        {
+                            sw.WriteLine($"{invitado.Nombre} {invitado.Id} {invitado.Email} {invitado.Edad}");
+                        }
+                }
+                else if (extension == ".csv")
+                {
+                    using (StreamWriter sw = new StreamWriter(rutaArchivo))
+                        foreach (Invitado invitado in invitados)
+                        {
+                            //sw.WriteLine($"\"{invitado.Nombre}\",\"{invitado.Id}\",\"{invitado.Email}\",{invitado.Edad}");
+                            sw.WriteLine($"{invitado.Nombre},{invitado.Id},{invitado.Email},{invitado.Edad}");
+                        }
+
+                }
+                Console.WriteLine("Se ha guardado la lista");
+            }
+            else if (Regex.IsMatch(resp, "^(no|n)$", RegexOptions.IgnoreCase))
+            {
+                Console.WriteLine("Chao");
+            }
+
+
+        }
 
     }
+
 }
+
 
