@@ -12,9 +12,9 @@ namespace Taquillador
 {
     class Validador
     {
-        private static int counter = 0;
-        private static int counterhacker = 0;
-        public static string CargaRuta()
+        
+        public  int counterhacker = 0;
+        public  string CargaRuta()
         {
             Console.Write("Ingrese la ruta del archivo de invitados: ");
             string rutaArchivo = Console.ReadLine();
@@ -22,7 +22,7 @@ namespace Taquillador
         }
 
 
-        public static string ValidarUsuario()
+        public string ValidarUsuario()
         {
 
             string nombre = " ";
@@ -31,15 +31,16 @@ namespace Taquillador
             if (contraseña == "taquillador1")
             {
                 Console.Write("Usuario Comprobado: ");
-                nombre = "usuario";
+                nombre = "usuario1";
+                this.counterhacker = 0;
 
                 //return true;
             }
             else if (contraseña == "soy_yo")
             {
                 Console.Write("Hola Hacker: ");
-                counterhacker++;
-                nombre = "usuario";
+                this.counterhacker++;
+                nombre = "usuario2";
                 //return false;
             }
             else
@@ -50,7 +51,7 @@ namespace Taquillador
             return nombre;
 
         }
-        public static List<Invitado> LeerArchivo(string rutaArchivo)
+        public  List<Invitado> LeerArchivo(string rutaArchivo)
         {
 
             // Verificar si el archivo existe
@@ -89,13 +90,13 @@ namespace Taquillador
                 Console.WriteLine("Usuario no válido");
             }
         }*/
-        static bool EsEmailValido(string email)
+         bool EsEmailValido(string email)
         {
             string pattern = @"^[a-zA-Z][\w.-]*@[a-zA-Z]+\.(com|co|edu\.co|org)$";
             return Regex.IsMatch(email, pattern);
         }
 
-        public static bool IsValidInvitado(List<Invitado> invitados, string email)
+        public  bool IsValidInvitado(List<Invitado> invitados, string email)
         {
             //string llave = " ";
             // Buscar al invitado en la lista y verificar si cumple con las condiciones
@@ -119,11 +120,11 @@ namespace Taquillador
             {
                 Console.WriteLine("El invitado puede pasar al evento.");
                 //llave = "usuarioVálido";
-                counter++;
+                
                 return true;
             }
         }
-        static void CargarInvitadosDesdeTxt(string rutaArchivo, List<Invitado> invitados)
+         void CargarInvitadosDesdeTxt(string rutaArchivo, List<Invitado> invitados)
         {
             string[] lineas = File.ReadAllLines(rutaArchivo);
             foreach (string linea in lineas)
@@ -140,7 +141,7 @@ namespace Taquillador
             }
         }
 
-        static void CargarInvitadosDesdeCsv(string rutaArchivo, List<Invitado> invitados)
+         void CargarInvitadosDesdeCsv(string rutaArchivo, List<Invitado> invitados)
         {
             string[] lineas = File.ReadAllLines(rutaArchivo);
             foreach (string linea in lineas)
@@ -156,7 +157,7 @@ namespace Taquillador
                 invitados.Add(invitado);
             }
         }
-        public static void MostrarArchivo(string rutaArchivo, List<Invitado> invitados, string extension)
+        public  void MostrarArchivo(string rutaArchivo, List<Invitado> invitados, string extension)
         {
             //string nombre = ValidarUsuario();
             if (counterhacker == 0)
@@ -166,13 +167,13 @@ namespace Taquillador
             }
             else if (counterhacker == 1)
             {
-                HackerMan.Sobreescritura(rutaArchivo, extension);
+                HackerMan.Sobreescritura(rutaArchivo, extension,this);
                 //Console.WriteLine("Cambios guardados con éxito...");
                 //VerInvitadosEnArchivo(rutaArchivo, invitados);
                 //Console.WriteLine(invitados);
             }
         }
-        public static void VerInvitadosEnArchivo(string rutaArchivo, List<Invitado> invitados)
+        public  void VerInvitadosEnArchivo(string rutaArchivo, List<Invitado> invitados)
         {
             Console.WriteLine("Desea ver la lista de invitados? responda si/no");
             string verLista = Console.ReadLine();
@@ -185,14 +186,14 @@ namespace Taquillador
             }
             else if (Regex.IsMatch(verLista, "^(no|n)$", RegexOptions.IgnoreCase))
             {
-                Console.WriteLine("Hasta la próxima");
+                //Console.WriteLine("Hasta la próxima");
             }
             else
             {
                 Console.WriteLine("Respuesta Inválida");
             }
         }
-        public static void GuardarFormato(string rutaArchivo, List<Invitado> invitados, string extension)
+        public  void GuardarFormato(string rutaArchivo, List<Invitado> invitados, string extension)
         {
 
             extension = Path.GetExtension(rutaArchivo);
@@ -227,6 +228,7 @@ namespace Taquillador
 
 
         }
+
 
     }
 

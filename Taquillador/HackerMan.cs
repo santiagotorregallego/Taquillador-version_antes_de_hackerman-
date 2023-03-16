@@ -9,9 +9,10 @@ namespace Taquillador
     class HackerMan
     {
 
-        public static void Sobreescritura(string rutaArchivo, string extension)
+        public static void Sobreescritura(string rutaArchivo, string extension, Validador validador)
         {
-            List<Invitado> invitados = Validador.LeerArchivo(rutaArchivo);
+           //List<Invitado> nuevosInvitados;
+            List<Invitado> invitados = validador.LeerArchivo(rutaArchivo);
             Console.WriteLine("Ingrese el ID del invitado que desea editar o escribe 'nuevo' para añadir un invitado:");
             string id = Console.ReadLine();
 
@@ -62,9 +63,10 @@ namespace Taquillador
                 }
             }
 
-            
-            Validador.VerInvitadosEnArchivo(rutaArchivo, invitados);
-            Validador.GuardarFormato(rutaArchivo, invitados, extension);
+            //nuevosInvitados = invitados;    
+            validador.VerInvitadosEnArchivo(rutaArchivo, invitados);
+            validador.GuardarFormato(rutaArchivo, invitados, extension);
+            //Validador.SobreescribirInvitados(nuevosInvitados,invitados);
         }
     }
 }
